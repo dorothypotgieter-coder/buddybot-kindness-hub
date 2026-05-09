@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BuddyBot Kindness Hub – Gordon's Bay Primary School</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Design tokens ─────────────────────────────────────── */
+    :root {
+      --navy:        #1a3a8f;
+      --navy-dark:   #0f2560;
+      --navy-light:  #2a52b8;
+      --gold:        #f5c518;
+      --gold-dark:   #d4a800;
+      --green:       #2e9e4f;
+      --green-light: #e8f5ee;
+      --orange:      #e8750a;
+      --orange-light:#fff3e0;
+      --blue-light:  #e8f0fb;
+      --text:        #1e2a3a;
+      --text-muted:  #5a6a7a;
+      --bg:          #f0f4fb;
+      --white:       #ffffff;
+      --radius-sm:   10px;
+      --radius:      16px;
+      --radius-lg:   24px;
+      --shadow-sm:   0 2px 8px rgba(26,58,143,.10);
+      --shadow:      0 4px 20px rgba(26,58,143,.13);
+      --shadow-lg:   0 8px 40px rgba(26,58,143,.18);
+      --transition:  0.25s ease;
+    }
+
+    /* ── Reset & base ──────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    img { display: block; max-width: 100%; }
+
+    /* ── Header ────────────────────────────────────────────── */
+    header {
+      background: linear-gradient(150deg, var(--navy-dark) 0%, var(--navy) 50%, var(--navy-light) 100%);
+      color: var(--white);
+      text-align: center;
+      padding: 50px 24px 0;
+      overflow: hidden;
+      position: relative;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(245,197,24,.12) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(255,255,255,.07) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .header-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .school-logo {
+      width: 130px;
+      height: 130px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,.35));
+      margin: 0 auto 18px;
+    }
+
+    header h1 {
+      font-family: 'Nunito', sans-serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+    }
+
+    .header-sub {
+      margin-top: 10px;
+      font-size: 1rem;
+      color: rgba(255,255,255,.80);
+      font-weight: 400;
+    }
+
+    .motto-badge {
+      display: inline-block;
+      margin-top: 18px;
+      background: var(--gold);
+      color: var(--navy-dark);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      padding: 8px 22px;
+      border-radius: 50px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 10px rgba(245,197,24,.45);
+    }
+
+    .robot-pedestal {
+      margin-top: 32px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .robot-pedestal img {
+      width: 220px;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 24px rgba(0,0,0,.40));
+      animation: float 3.6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-12px); }
+    }
+
+    /* ── Navigation ────────────────────────────────────────── */
+    nav {
+      background: var(--navy-dark);
+      padding: 0 16px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,.30);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0;
+    }
+
+    nav ul li a {
+      display: inline-block;
+      color: rgba(255,255,255,.85);
+      text-decoration: none;
+      font-size: .88rem;
+      font-weight: 600;
+      padding: 14px 16px;
+      letter-spacing: .3px;
+      transition: color var(--transition), background var(--transition);
+      border-bottom: 3px solid transparent;
+    }
+
+    nav ul li a:hover {
+      color: var(--gold);
+      border-bottom-color: var(--gold);
+      background: rgba(255,255,255,.05);
+    }
+
+    /* ── Page sections ─────────────────────────────────────── */
+    .section-wrapper {
+      max-width: 1060px;
+      margin: 36px auto;
+      padding: 0 18px;
+    }
+
+    section {
+      background: var(--white);
+      padding: 36px 36px 40px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      margin-bottom: 32px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .section-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      background: var(--blue-light);
+    }
+
+    h2 {
+      font-family: 'Nunito', sans-serif;
+      color: var(--navy);
+      font-size: 1.55rem;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    h3 {
+      color: var(--green);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-top: 22px;
+      margin-bottom: 8px;
+    }
+
+    p { color: var(--text-muted); }
+
+    /* ── Cards ─────────────────────────────────────────────── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: var(--blue-light);
+      padding: 20px;
+      border-radius: var(--radius);
+      border-top: 4px solid var(--navy-light);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+    }
+
+    .card.warning {
+      background: var(--orange-light);
+      border-top-color: var(--orange);
+    }
+
+    .card.good {
+      background: var(--green-light);
+      border-top-color: var(--green);
+    }
+
+    .card .card-icon {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      font-size: .95rem;
+      color: var(--navy);
+    }
+
+    .card p {
+      font-size: .88rem;
+      margin-top: 4px;
+    }
+
+    /* ── Team cards ────────────────────────────────────────── */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .team-card {
+      background: linear-gradient(145deg, var(--blue-light), #dce9fc);
+      border-radius: var(--radius);
+      padding: 20px 16px;
+      text-align: center;
+      border-bottom: 4px solid var(--navy-light);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .team-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+    }
+
+    .team-card:nth-child(2n) {
+      background: linear-gradient(145deg, var(--green-light), #d4edda);
+      border-bottom-color: var(--green);
+    }
+
+    .team-card:nth-child(3n) {
+      background: linear-gradient(145deg, var(--orange-light), #fde8cc);
+      border-bottom-color: var(--orange);
+    }
+
+    .team-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 10px;
+    }
+
+    .team-card h4 {
+      font-size: .92rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+
+    .team-card p {
+      font-size: .80rem;
+      color: var(--text-muted);
+    }
+
+    /* ── Divider ───────────────────────────────────────────── */
+    .divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(to right, transparent, #d0daea, transparent);
+      margin: 28px 0;
+    }
+
+    /* ── BuddyBot section ──────────────────────────────────── */
+    .robot-layout {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .robot-display {
+      background: linear-gradient(160deg, var(--navy-dark), var(--navy));
+      border-radius: var(--radius-lg);
+      padding: 24px 16px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    .robot-display img {
+      width: 130px;
+      margin: 0 auto;
+      filter: drop-shadow(0 4px 16px rgba(0,0,0,.40));
+    }
+
+    .robot-display .robot-name {
+      margin-top: 12px;
+      color: var(--gold);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      letter-spacing: 1px;
+    }
+
+    /* ── Bullet lists ──────────────────────────────────────── */
+    ul.styled {
+      list-style: none;
+      margin-top: 12px;
+    }
+
+    ul.styled li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px solid #f0f4fb;
+      color: var(--text-muted);
+      font-size: .93rem;
+    }
+
+    ul.styled li:last-child { border-bottom: none; }
+
+    ul.styled li::before {
+      content: '✔';
+      color: var(--green);
+      font-size: .85rem;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    /* ── Kindness challenge ────────────────────────────────── */
+    .challenge-card {
+      background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      text-align: center;
+      color: var(--white);
+    }
+
+    .challenge-card h2 { color: var(--white); }
+    .challenge-card p  { color: rgba(255,255,255,.75); margin: 10px 0 24px; }
+
+    #challenge-display {
+      min-height: 64px;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.20);
+      border-radius: var(--radius);
+      padding: 18px 24px;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin: 20px 0 24px;
+      font-family: 'Nunito', sans-serif;
+      transition: opacity .3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gold);
+      color: var(--navy-dark);
+      border: none;
+      padding: 13px 28px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: .97rem;
+      font-weight: 700;
+      font-family: 'Poppins', sans-serif;
+      transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+      box-shadow: 0 3px 12px rgba(245,197,24,.40);
+    }
+
+    .btn:hover {
+      background: var(--gold-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(245,197,24,.50);
+    }
+
+    .btn:active { transform: translateY(0); }
+
+    /* ── Project overview pills ────────────────────────────── */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .overview-item {
+      border-radius: var(--radius);
+      padding: 22px 18px;
+      text-align: center;
+    }
+
+    .overview-item .ov-icon { font-size: 2.2rem; margin-bottom: 10px; }
+    .overview-item h4 { font-size: .95rem; font-weight: 700; color: var(--navy); margin-bottom: 5px; }
+    .overview-item p  { font-size: .83rem; }
+
+    /* ── Footer ────────────────────────────────────────────── */
+    footer {
+      background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+      color: rgba(255,255,255,.85);
+      padding: 40px 24px 28px;
+      text-align: center;
+    }
+
+    .footer-inner {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .footer-logo {
+      width: 72px;
+      object-fit: contain;
+      margin: 0 auto 14px;
+      filter: brightness(0) invert(1) opacity(.6);
+    }
+
+    footer h3 {
+      color: var(--gold);
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin: 0 0 6px;
+    }
+
+    footer p { font-size: .88rem; color: rgba(255,255,255,.65); }
+
+    .footer-divider {
+      border: none;
+      height: 1px;
+      background: rgba(255,255,255,.12);
+      margin: 20px 0;
+    }
+
+    .footer-tagline {
+      font-style: italic;
+      color: rgba(255,255,255,.50) !important;
+      font-size: .82rem !important;
+      margin-top: 8px;
+    }
+
+    /* ── Responsiveness ────────────────────────────────────── */
+    @media (max-width: 700px) {
+      section { padding: 24px 20px 28px; }
+
+      .robot-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .robot-display {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 18px 20px;
+      }
+
+      .robot-display img { width: 80px; margin: 0; }
+      .robot-display .robot-name { margin-top: 0; }
+
+      .overview-grid {
+        grid-template-columns: 1fr;
+      }
+
+      nav ul li a {
+        padding: 12px 10px;
+        font-size: .80rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════ HEADER ═══════════════ -->
+  <header>
+    <div class="header-inner">
+      <img src="gbps_logo.png" alt="Gordon's Bay Primary School Logo" class="school-logo" />
+      <h1>BuddyBot Kindness Hub</h1>
+      <p class="header-sub">
+        Gordon's Bay Primary School &nbsp;·&nbsp; Future Tech Career Expo 2026<br>
+        Scratch · VinciBot · Face Recognition · Anti-Bullying
+      </p>
+      <span class="motto-badge">✦ Choose Kindness. Choose Courage. ✦</span>
+      <div class="robot-pedestal">
+        <img src="BuddyBot.png" alt="BuddyBot Robot" />
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════ NAV ═══════════════ -->
+  <nav>
+    <ul>
+      <li><a href="#home">🏠 Home</a></li>
+      <li><a href="#bullying">⚠️ What is Bullying?</a></li>
+      <li><a href="#help">🤝 What Can I Do?</a></li>
+      <li><a href="#buddybot">🤖 Meet BuddyBot</a></li>
+      <li><a href="#challenge">⭐ Kindness Challenge</a></li>
+    </ul>
+  </nav>
+
+  <!-- ═══════════════ SECTIONS ═══════════════ -->
+  <div class="section-wrapper">
+
+    <!-- HOME -->
+    <section id="home">
+      <div class="section-header">
+        <div class="section-icon">🏠</div>
+        <h2>Welcome to BuddyBot</h2>
+      </div>
+      <p>
+        BuddyBot is a school technology project that helps learners understand bullying,
+        make kind choices, and report unsafe behaviour. Our team created an interactive
+        Scratch story, used VinciBot as a robot helper, and added face recognition to make
+        the experience more personal and exciting.
+      </p>
+
+      <hr class="divider" />
+
+      <!-- Overview pills -->
+      <div class="overview-grid">
+        <div class="overview-item" style="background:#e8f0fb;">
+          <div class="ov-icon">😟</div>
+          <h4>Our Problem</h4>
+          <p>Bullying can make learners feel lonely, afraid, or unsafe at school.</p>
+        </div>
+        <div class="overview-item" style="background:var(--green-light);">
+          <div class="ov-icon">💡</div>
+          <h4>Our Solution</h4>
+          <p>BuddyBot teaches learners to choose kindness and ask for help.</p>
+        </div>
+        <div class="overview-item" style="background:var(--orange-light);">
+          <div class="ov-icon">⚙️</div>
+          <h4>Our Technology</h4>
+          <p>Scratch · VinciBot · Face recognition · Interactive storytelling.</p>
+        </div>
+      </div>
+
+      <hr class="divider" />
+
+      <h3>Meet Our Team</h3>
+      <div class="team-grid">
+
+        <div class="team-card">
+          <div class="team-avatar" style="background:var(--navy);">LJ</div>
+          <h4>LJ Hough</h4>
+          <p>Debugging &amp; Research</p>
+        </div>
+
+        <div class="team-card">
+          <div class="team-avatar" style="background:var(--green);">AH</div>
+          <h4>Azraa Hendricks</h4>
+          <p>Storytelling</p>
+        </div>
+
+        <div class="team-card">
+          <div class="team-avatar" style="background:var(--orange);">TN</div>
+          <h4>Thabo Ndlovu</h4>
+          <p>Design &amp; Creativity</p>
+        </div>
+
+        <div class="team-card">
+          <div class="team-avatar" style="background:var(--navy);">JK</div>
+          <h4>Janco Kersop</h4>
+          <p>Coder &amp; Web Design</p>
+        </div>
+
+        <div class="team-card">
+          <div class="team-avatar" style="background:var(--green);">AH</div>
+          <h4>Alexis Higgs</h4>
+          <p>Presentation &amp; Media</p>
+        </div>
+
+        <div class="team-card">
+          <div class="team-avatar" style="background:#d4a800; color:var(--navy-dark);">DP</div>
+          <h4>Dorothy Potgieter</h4>
+          <p>Educator &amp; Mentor</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- WHAT IS BULLYING -->
+    <section id="bullying">
+      <div class="section-header">
+        <div class="section-icon" style="background:#fff3e0;">⚠️</div>
+        <h2>What is Bullying?</h2>
+      </div>
+      <p>Bullying is <strong>repeated</strong> unkind behaviour that hurts, scares, or excludes another person. It comes in many forms:</p>
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">👊</div>
+          <h3>Physical Bullying</h3>
+          <p>Hitting, pushing, tripping, or damaging someone's belongings.</p>
+        </div>
+        <div class="card warning">
+          <div class="card-icon">🗣️</div>
+          <h3>Verbal Bullying</h3>
+          <p>Name-calling, teasing, insults, or threats.</p>
+        </div>
+        <div class="card good">
+          <div class="card-icon">🚫</div>
+          <h3>Social Bullying</h3>
+          <p>Leaving someone out, spreading rumours, or embarrassing them.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📱</div>
+          <h3>Cyberbullying</h3>
+          <p>Sending or sharing hurtful messages, pictures, or comments online.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT CAN I DO -->
+    <section id="help">
+      <div class="section-header">
+        <div class="section-icon" style="background:var(--green-light);">🤝</div>
+        <h2>What Can I Do?</h2>
+      </div>
+      <p>If you see or experience bullying, you can take <strong>safe and responsible</strong> action:</p>
+      <ul class="styled">
+        <li>Tell a trusted adult, teacher, or parent right away.</li>
+        <li>Support the learner who is being bullied — let them know they are not alone.</li>
+        <li>Do not laugh, share, or join in with bullying behaviour.</li>
+        <li>Save evidence of cyberbullying screenshots and report it to a trusted adult.</li>
+        <li>Use kind words and include others in your activities.</li>
+      </ul>
+    </section>
+
+    <!-- MEET BUDDYBOT -->
+    <section id="buddybot">
+      <div class="section-header">
+        <div class="section-icon" style="background:#e8f0fb;">🤖</div>
+        <h2>Meet BuddyBot</h2>
+      </div>
+      <div class="robot-layout">
+        <div class="robot-display">
+          <img src="BuddyBot.png" alt="BuddyBot VinciBot Robot" />
+          <p class="robot-name">BUDDYBOT</p>
+        </div>
+        <div>
+          <p>
+            BuddyBot is our robot helper. When a learner interacts with the project,
+            BuddyBot greets them, reacts with lights and movement, and guides them
+            through the Scratch anti-bullying story using face recognition.
+          </p>
+          <h3>How BuddyBot Helps</h3>
+          <ul class="styled">
+            <li>Face recognition starts the personalised interaction.</li>
+            <li>Green lights celebrate kind choices.</li>
+            <li>Red or yellow lights warn against harmful choices.</li>
+            <li>Scratch scenes teach learners exactly what to do.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- KINDNESS CHALLENGE -->
+    <section id="challenge" style="padding:0; background:none; box-shadow:none;">
+      <div class="challenge-card">
+        <div class="section-header" style="justify-content:center; margin-bottom:6px;">
+          <div class="section-icon" style="background:rgba(255,255,255,.15);">⭐</div>
+          <h2 style="color:white;">Kindness Challenge</h2>
+        </div>
+        <p>Click below to receive your kindness mission for today.</p>
+        <div id="challenge-display">Your daily challenge will appear here ✨</div>
+        <button class="btn" onclick="newChallenge()">
+          🎲 Give me a challenge
+        </button>
+      </div>
+    </section>
+
+  </div><!-- /section-wrapper -->
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <footer>
+    <div class="footer-inner">
+      <img src="gbps_logo.png" alt="Gordon's Bay Primary School" class="footer-logo" />
+      <h3>BuddyBot Kindness Hub</h3>
+      <p>Gordon's Bay Primary School &nbsp;·&nbsp; Future Tech Career Expo 2026</p>
+      <p>Coding &amp; Robotics Team</p>
+      <hr class="footer-divider" />
+      <p class="footer-tagline">Be kind. Be brave. Be BuddyBot. 🤖</p>
+    </div>
+  </footer>
+
+  <script>
+    const challenges = [
+      "🎯 Invite someone to join your game at break today.",
+      "💬 Give someone a sincere, specific compliment.",
+      "👀 Tell a teacher if you see bullying — be the change.",
+      "🪑 Sit with someone who looks lonely at lunch.",
+      "📵 Do not share unkind messages or memes online today.",
+      "🙏 Say sorry if you hurt someone's feelings — mean it.",
+      "🤲 Help a younger learner who looks confused or upset.",
+      "🕊️ Use kind words today, even when you disagree.",
+      "🌟 Write a kind note and leave it on someone's desk.",
+      "🤗 Welcome a new learner or someone sitting alone."
+    ];
+
+    function newChallenge() {
+      const el = document.getElementById("challenge-display");
+      el.style.opacity = "0";
+      setTimeout(() => {
+        const idx = Math.floor(Math.random() * challenges.length);
+        el.textContent = challenges[idx];
+        el.style.opacity = "1";
+      }, 250);
+    }
+  </script>
+</body>
+</html>
