@@ -1090,12 +1090,10 @@
              <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe>
              <video controls poster="thumbnail.jpg"><source src="buddybot_demo.mp4" type="video/mp4"></video>
         -->
-        <div class="video-placeholder">
-          <div class="vp-icon">🎬</div>
-          <div><strong>Video coming soon</strong></div>
-          <div>To embed: replace this block with an &lt;iframe&gt; (YouTube) or a local &lt;video&gt; tag.</div>
-          <div>Filename suggestion: <code>buddybot_demo.mp4</code></div>
-        </div>
+        <video controls width="100%" style="border-radius:12px; display:block;">
+          <source src="buddybot_demo.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
       </div>
     </section>
 
@@ -1218,4 +1216,46 @@
       }, 250);
     }
 
-    /* ── Live Kindn
+    /* ── Live Kindness Score widget ────────────────────────── */
+    let kindnessScore = 0;
+    const SCORE_MAX = 30;           // matches Scratch finale (3 scenes × 10)
+    const GOLD_THRESHOLD = 20;
+    const SILVER_THRESHOLD = 10;
+
+    function renderScore() {
+      const valEl  = document.getElementById("score-value");
+      const fillEl = document.getElementById("score-fill");
+      const badge  = document.getElementById("badge-pop");
+      valEl.textContent = kindnessScore;
+      const pct = Math.max(0, Math.min(100, (kindnessScore / SCORE_MAX) * 100));
+      fillEl.style.width = pct + "%";
+
+      // Update badge
+      badge.classList.remove("show");
+      let label = null;
+      if (kindnessScore >= GOLD_THRESHOLD)        label = "🏆 Kindness Champion!";
+      else if (kindnessScore >= SILVER_THRESHOLD) label = "🥈 Kindness Star — keep going!";
+      else if (kindnessScore <= -5)               label = "💛 Every day is a new chance.";
+      if (label) {
+        badge.textContent = label;
+        // re-trigger animation
+        void badge.offsetWidth;
+        badge.classList.add("show");
+      }
+    }
+
+    function addScore(delta) {
+      kindnessScore += delta;
+      renderScore();
+    }
+
+    function resetScore() {
+      kindnessScore = 0;
+      renderScore();
+    }
+
+    // Initial render
+    renderScore();
+  </script>
+</body>
+</html>
