@@ -619,14 +619,26 @@
       color: #fff;
       box-shadow: 0 3px 12px rgba(46,158,79,.40);
     }
+    .live-score-buttons .btn.kind:hover {
+      background: #237a3c;
+      box-shadow: 0 6px 20px rgba(46,158,79,.55);
+    }
     .live-score-buttons .btn.unkind {
       background: #c93a3a;
       color: #fff;
       box-shadow: 0 3px 12px rgba(201,58,58,.40);
     }
+    .live-score-buttons .btn.unkind:hover {
+      background: #a02c2c;
+      box-shadow: 0 6px 20px rgba(201,58,58,.55);
+    }
     .live-score-buttons .btn.reset {
-      background: rgba(255,255,255,.14);
+      background: rgba(255,255,255,.18);
       color: #fff;
+      box-shadow: none;
+    }
+    .live-score-buttons .btn.reset:hover {
+      background: rgba(255,255,255,.30);
       box-shadow: none;
     }
     .badge-pop {
@@ -1217,31 +1229,45 @@
     }
 
     /* ── Live Kindness Score widget ────────────────────────── */
-    let kindnessScore = 0;
-    const SCORE_MAX = 30;           // matches Scratch finale (3 scenes × 10)
-    const GOLD_THRESHOLD = 20;
-    const SILVER_THRESHOLD = 10;
+    const SCORE_MAX        = 100;
+    const GOLD_THRESHOLD   = 50;
+    const SILVER_THRESHOLD = 20;
+
+    // Load saved score from localStorage (persists across page refreshes)
+    let kindnessScore = parseInt(localStorage.getItem("buddybot_score") || "0", 10);
 
     function renderScore() {
       const valEl  = document.getElementById("score-value");
       const fillEl = document.getElementById("score-fill");
       const badge  = document.getElementById("badge-pop");
+
+      if (!valEl || !fillEl || !badge) return; // safety guard
+
+      // Update score number
       valEl.textContent = kindnessScore;
+
+      // Update progress bar (clamp between 0–100%)
       const pct = Math.max(0, Math.min(100, (kindnessScore / SCORE_MAX) * 100));
       fillEl.style.width = pct + "%";
 
-      // Update badge
-      badge.classList.remove("show");
-      let label = null;
-      if (kindnessScore >= GOLD_THRESHOLD)        label = "🏆 Kindness Champion!";
+      // Update badge message
+      badge.style.opacity = "0";
+      badge.style.transform = "scale(0.6)";
+      let label = "";
+      if      (kindnessScore >= GOLD_THRESHOLD)   label = "🏆 Kindness Champion!";
       else if (kindnessScore >= SILVER_THRESHOLD) label = "🥈 Kindness Star — keep going!";
       else if (kindnessScore <= -5)               label = "💛 Every day is a new chance.";
+
       if (label) {
         badge.textContent = label;
-        // re-trigger animation
-        void badge.offsetWidth;
-        badge.classList.add("show");
+        setTimeout(function() {
+          badge.style.opacity = "1";
+          badge.style.transform = "scale(1)";
+        }, 50);
       }
+
+      // Save to localStorage
+      localStorage.setItem("buddybot_score", kindnessScore);
     }
 
     function addScore(delta) {
@@ -1251,10 +1277,11 @@
 
     function resetScore() {
       kindnessScore = 0;
+      localStorage.removeItem("buddybot_score");
       renderScore();
     }
 
-    // Initial render
+    // Render on page load
     renderScore();
   </script>
 </body>
